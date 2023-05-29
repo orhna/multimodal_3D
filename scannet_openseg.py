@@ -8,8 +8,8 @@ from tqdm import tqdm, trange
 import tensorflow as tf2
 import tensorflow.compat.v1 as tf
 from os.path import join, exists
-from utils.fusion_util import extract_openseg_img_feature, PointCloudToImageMapper, save_fused_feature
 
+from utils.fusion_util import extract_openseg_img_feature, PointCloudToImageMapper, save_fused_feature
 
 def get_args():
     '''Command line arguments.'''

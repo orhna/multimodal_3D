@@ -8,7 +8,6 @@ import tensorflow.compat.v1 as tf
 
 def read_bytes(path):
     '''Read bytes for OpenSeg model running.'''
-
     with io.gfile.GFile(path, 'rb') as f:
         file_bytes = f.read()
     return file_bytes
@@ -64,7 +63,7 @@ def extract_openseg_img_feature(img_dir, openseg_model, text_emb, img_size=None,
         feat_2d = tf.cast(image_embedding_feat[[0]], dtype=tf.float16).numpy()
 
     feat_2d = torch.from_numpy(feat_2d).permute(2, 0, 1)
-
+    
     return feat_2d
 
 def save_fused_feature(feat_bank, point_ids, n_points, out_dir, scene_id, args):
@@ -89,6 +88,27 @@ def save_fused_feature(feat_bank, point_ids, n_points, out_dir, scene_id, args):
         },  os.path.join(out_dir, scene_id +'_%d.pt'%(n)))
         print(os.path.join(out_dir, scene_id +'_%d.pt'%(n)) + ' is saved!')
 
+def save_fused_feature_no_args(feat_bank, point_ids, n_points, out_dir, scene_id, num_rand_file_per_scene, n_split_points ):
+    '''Save features.'''
+
+    for n in range(num_rand_file_per_scene):
+        if n_points < n_split_points:
+            n_points_cur = n_points # to handle point cloud numbers less than n_split_points
+        else:
+            n_points_cur = n_split_points
+
+        rand_ind = np.random.choice(range(n_points), n_points_cur, replace=False)
+
+        mask_entire = torch.zeros(n_points, dtype=torch.bool)
+        mask_entire[rand_ind] = True
+        mask = torch.zeros(n_points, dtype=torch.bool)
+        mask[point_ids] = True
+        mask_entire = mask_entire & mask
+
+        torch.save({"feat": feat_bank[mask_entire].half().cpu(),
+                    "mask_full": mask_entire
+        },  os.path.join(out_dir, scene_id +'_%d.pt'%(n)))
+        print(os.path.join(out_dir, scene_id +'_%d.pt'%(n)) + ' is saved!')
 
 class PointCloudToImageMapper(object):
     def __init__(self, image_dim,

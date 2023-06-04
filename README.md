@@ -26,3 +26,5 @@ python scannet_openseg.py \
             --process_id_range 0,100\
             --split train
 ```
+### Important
+- Be aware of the data path whether it has `/` or `\` as a separator

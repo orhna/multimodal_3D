@@ -31,8 +31,9 @@ def get_args():
 
 def process_one_scene(data_path, out_dir, args):
     '''Process one scene.'''
-
+    
     # short hand
+    data_path = data_path.replace("\\", "/")
     scene_id = data_path.split('/')[-1].split('_vh')[0]
 
     num_rand_file_per_scene = args.num_rand_file_per_scene
@@ -49,6 +50,7 @@ def process_one_scene(data_path, out_dir, args):
 
     n_interval = num_rand_file_per_scene
     n_finished = 0
+    
     for n in range(n_interval):
 
         if exists(join(out_dir, scene_id +'_%d.pt'%(n))):
@@ -57,12 +59,14 @@ def process_one_scene(data_path, out_dir, args):
             continue
     if n_finished == n_interval:
         return 1
-
+    
     # short hand for processing 2D features
     scene = join(args.data_root_2d, scene_id)
     img_dirs = sorted(glob(join(scene, 'color/*')), key=lambda x: int(os.path.basename(x)[:-4]))
     num_img = len(img_dirs)
-    device = torch.device('cpu')
+    
+    #device = torch.device('cpu')
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # extract image features and keep them in the memory
     # default: False (extract image on the fly)
@@ -74,9 +78,10 @@ def process_one_scene(data_path, out_dir, args):
     n_points_cur = n_points
     counter = torch.zeros((n_points_cur, 1), device=device)
     sum_features = torch.zeros((n_points_cur, feat_dim), device=device)
-
+    
     ################ Feature Fusion ###################
     vis_id = torch.zeros((n_points_cur, num_img), dtype=int, device=device)
+
     for img_id, img_dir in enumerate(tqdm(img_dirs)):
         # load pose
         posepath = img_dir.replace('color', 'pose').replace('.jpg', '.txt')
@@ -99,7 +104,9 @@ def process_one_scene(data_path, out_dir, args):
         else:
             feat_2d = extract_openseg_img_feature(img_dir, openseg_model, text_emb, img_size=[240, 320]).to(device)
 
-        feat_2d_3d = feat_2d[:, mapping[:, 1], mapping[:, 2]].permute(1, 0)
+        #without this conversion, it gives error while indexing
+        mapping = mapping.to(int)
+        feat_2d_3d = feat_2d[:, mapping[:, 1], mapping[:, 2]].permute(1, 0).to(device)
 
         counter[mask!=0]+= 1
         sum_features[mask!=0] += feat_2d_3d[mask!=0]
@@ -137,7 +144,6 @@ def main(args):
     os.makedirs(out_dir, exist_ok=True)
     process_id_range = args.process_id_range
 
-
     if split== 'train': # for training set, export a chunk of point cloud
         args.n_split_points = 20000
         args.num_rand_file_per_scene = 5
@@ -174,12 +180,9 @@ def main(args):
     for i in trange(total_num):
         if id_range is not None and \
            (i<id_range[0] or i>id_range[1]):
-            print('skip ', i, data_paths[i])
+            #print('skip ', i, data_paths[i])
             continue
-
         process_one_scene(data_paths[i], out_dir, args)
-
-
 
 if __name__ == "__main__":
     args = get_args()

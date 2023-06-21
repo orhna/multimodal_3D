@@ -28,3 +28,7 @@ python scannet_openseg.py \
 ```
 ### Important
 - Be aware of the data path whether it has `/` or `\` as a separator
+
+
+## Demo Jupyter Notebook for Fused 2D Features
+[notebook](demo_2d.ipynb)

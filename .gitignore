@@ -51,3 +51,4 @@ wandb/*
 test.py
 
 .ipynb_checkpoints/
+utils/__pycache__/

@@ -32,3 +32,10 @@ python scannet_openseg.py \
 
 ## Demo Jupyter Notebook for Fused 2D Features
 [notebook](demo_2d.ipynb)
+## Demo Jupyter Notebook for Distilled 3D Features
+[notebook](demo_3d.ipynb)
+
+## Simplified distillation pipeline
+[notebook](distill_simplified.ipynb)
+## Simplified pipeline to save distilled 3D features
+[notebook](eval_simplified.ipynb)

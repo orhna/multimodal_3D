@@ -37,7 +37,10 @@ python scannet_openseg.py \
 ## Demo Jupyter Notebook for Ensembled Features
 [notebook](demo_ensemble.ipynb)
 
+
 ## Simplified distillation pipeline
-[notebook](distill_simplified.ipynb)
+[notebook](distill_simplified.ipynb)*
 ## Simplified pipeline to save distilled 3D features
-[notebook](eval_simplified.ipynb)
+[notebook](eval_simplified.ipynb)*
+
+*need to be launched under original openscene repo

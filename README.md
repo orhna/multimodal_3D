@@ -34,6 +34,8 @@ python scannet_openseg.py \
 [notebook](demo_2d.ipynb)
 ## Demo Jupyter Notebook for Distilled 3D Features
 [notebook](demo_3d.ipynb)
+## Demo Jupyter Notebook for Ensembled Features
+[notebook](demo_ensemble.ipynb)
 
 ## Simplified distillation pipeline
 [notebook](distill_simplified.ipynb)

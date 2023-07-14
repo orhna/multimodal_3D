@@ -116,7 +116,10 @@ class DatasetAugmenter:
 
         # 3d export
         for label, mesh in self.model_triangle_meshes.items():
+            mesh.translate(self.model_positions[label])
             model_point_cloud = mesh.sample_points_uniformly(1000)
+            mesh.translate(-self.model_positions[label])
+
             model_point_cloud = model_point_cloud.voxel_down_sample(voxel_size=0.05)
 
             if np.asarray(model_point_cloud.colors).size == 0:

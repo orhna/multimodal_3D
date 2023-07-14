@@ -171,6 +171,7 @@ class DatasetAugmenter:
             o3d.io.write_triangle_mesh(mesh_path, mesh)
             mesh.translate(-self.model_positions[label])
 
+            # Workaround to preserve textures
             _object = o3d.io.read_triangle_model(mesh_path)
             render.scene.add_model(f'object_{label}', _object)
 

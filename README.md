@@ -30,13 +30,8 @@ python scannet_openseg.py \
 - Be aware of the data path whether it has `/` or `\` as a separator
 
 
-## Demo Jupyter Notebook for Fused 2D Features
-[notebook](demo_2d.ipynb)
-## Demo Jupyter Notebook for Distilled 3D Features
-[notebook](demo_3d.ipynb)
-## Demo Jupyter Notebook for Ensembled Features
-[notebook](demo_ensemble.ipynb)
-
+## Demo Jupyter Notebook for both highlighting and evaluation
+[notebook](highlight_evaluate.ipynb)
 
 ## Simplified distillation pipeline
 [notebook](distill_simplified.ipynb)*

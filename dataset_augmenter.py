@@ -107,7 +107,7 @@ class DatasetAugmenter:
 
         output_path2d = os.path.join(output_path, '2d')
         os.makedirs(output_path2d, exist_ok=True)
-        output_path3d = os.path.join(output_path, '3d')
+        output_path3d = os.path.join(output_path, '3d', 'train')
         os.makedirs(output_path3d, exist_ok=True)
 
         augmented_scene_array = np.asarray(self.scene_point_cloud.points)
@@ -133,10 +133,14 @@ class DatasetAugmenter:
                                                      np.repeat(label, len(model_point_cloud.points))])
 
         torch.save((augmented_scene_array, augmented_scene_colors, augmented_scene_labels),
-                   os.path.join(output_path3d, f'{self.scene_name}aug.pth'))
+                   os.path.join(output_path3d, f'{self.scene_name}_vh.pth'))
 
         # 2d export
-        intrinsic_matrix = np.loadtxt(os.path.join(self.path2d, 'intrinsics.txt'))
+        intrinsic_path = os.path.join(self.path2d, 'intrinsics.txt')
+        aug_intrinsic_path = os.path.join(output_path2d, 'intrinsics.txt')
+        shutil.copyfile(intrinsic_path, aug_intrinsic_path)
+
+        intrinsic_matrix = np.loadtxt(intrinsic_path)
         image_ids = [_id.split(".")[0] for _id in os.listdir(os.path.join(self.path2d, self.scene_name, 'color'))]
 
         aug_scene_folder = os.path.join(output_path2d, self.scene_name)

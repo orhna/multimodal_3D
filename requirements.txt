@@ -7,3 +7,10 @@ imageio
 plyfile
 opencv-python
 git+https://github.com/openai/CLIP.git
+torch
+numpy
+objaverse
+Pillow
+matplotlib
+openai
+tabulate

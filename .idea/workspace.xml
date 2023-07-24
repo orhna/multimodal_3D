@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="cb64fca8-eae3-4f7d-abfd-32eaead799b0" name="Changes" comment="added chair descriptors and difference vis">
+      <change beforePath="$PROJECT_DIR$/highlight_evaluate.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/highlight_evaluate_aleks.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/highlight_evaluate_aleks.ipynb" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="scannet-augmentation" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2S9eAdpKTFLLOwCqTJtfLKu1UIi" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;fusion&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/aleks/3dcv/multimodal_3D&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="cb64fca8-eae3-4f7d-abfd-32eaead799b0" name="Changes" comment="" />
+      <created>1688563082151</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1688563082151</updated>
+      <workItem from="1688563083655" duration="417000" />
+      <workItem from="1689076929802" duration="5689000" />
+      <workItem from="1689163403559" duration="6272000" />
+      <workItem from="1689320967389" duration="7774000" />
+      <workItem from="1689408436452" duration="1099000" />
+      <workItem from="1689585180209" duration="947000" />
+      <workItem from="1689597089903" duration="2828000" />
+      <workItem from="1689628941989" duration="616000" />
+      <workItem from="1689637827149" duration="158000" />
+      <workItem from="1689771202523" duration="599000" />
+    </task>
+    <task id="LOCAL-00001" summary="Started creating a class for dataset augmentation">
+      <option name="closed" value="true" />
+      <created>1689082370681</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1689082370681</updated>
+    </task>
+    <task id="LOCAL-00002" summary="2d / 3d export should work now!">
+      <option name="closed" value="true" />
+      <created>1689181444986</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1689181444987</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Added support for multiple models and labels now!">
+      <option name="closed" value="true" />
+      <created>1689328535663</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1689328535663</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Added file for chair scene">
+      <option name="closed" value="true" />
+      <created>1689330782641</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1689330782641</updated>
+    </task>
+    <task id="LOCAL-00005" summary="3d export bug fix">
+      <option name="closed" value="true" />
+      <created>1689331454902</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1689331454902</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Adhere to folder structure">
+      <option name="closed" value="true" />
+      <created>1689409245333</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1689409245333</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Visualized unlabeled points for info">
+      <option name="closed" value="true" />
+      <created>1689599484002</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1689599484002</updated>
+    </task>
+    <task id="LOCAL-00008" summary="added chair descriptors and difference vis">
+      <option name="closed" value="true" />
+      <created>1689637944798</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1689637944798</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Started creating a class for dataset augmentation" />
+    <MESSAGE value="2d / 3d export should work now!" />
+    <MESSAGE value="Added support for multiple models and labels now!" />
+    <MESSAGE value="Added file for chair scene" />
+    <MESSAGE value="3d export bug fix" />
+    <MESSAGE value="Adhere to folder structure" />
+    <MESSAGE value="Visualized unlabeled points for info" />
+    <MESSAGE value="added chair descriptors and difference vis" />
+    <option name="LAST_COMMIT_MESSAGE" value="added chair descriptors and difference vis" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/multimodal_3D$test.coverage" NAME="test Coverage Results" MODIFIED="1689181292126" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/multimodal_3D$augment_scene_chairs.coverage" NAME="augment_scene_chairs Coverage Results" MODIFIED="1689409128616" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>

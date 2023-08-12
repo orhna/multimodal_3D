@@ -12,7 +12,15 @@ from tabulate import tabulate
 import clip
 
 def load_scene(path, visualize = True):
-    
+    """
+    Function to load pre-processed 3D data from ScanNet
+    example: "scene0000_00_vh_clean_2.pth"
+
+    :param path: file path
+    :param visualize: set True to visualize the loaded data with Open3d
+
+    :return: coords, colors, gt labels
+    """
     sample = torch.load(path)
     sample_points  = sample[0]
     sample_colors = sample[1]
@@ -27,7 +35,18 @@ def load_scene(path, visualize = True):
     return sample_points, sample_colors, sample_labels
 
 def load_fused_features(path, sample_points, sample_colors, sample_labels):
-    
+    """
+    Function to load fused 2D features by OpenScene. 
+    Filters the points from the raw 3D data to match the points from 2D fused features.
+    example: "scene0000_00_0.pt"
+
+    :param path: file path
+    :param sample_points: coordinates of the point cloud of the raw data loaded with load_scene()
+    :param sample_colors: colors of the point cloud of the raw data loaded with load_scene()
+    :param sample_labels: ground truth labels of the point cloud of the raw data loaded with load_scene()
+
+    :return: fused, filtered coords, filtered colors, filtered gt labels, matched point indices
+    """
     features = torch.load(path)
     indices = torch.nonzero(features["mask_full"]).squeeze()
     filtered_point_cloud = sample_points[indices, :]
@@ -38,7 +57,16 @@ def load_fused_features(path, sample_points, sample_colors, sample_labels):
     return fused_features, filtered_point_cloud, filtered_point_cloud_colors, filtered_point_cloud_labels, indices
 
 def load_distilled_features(path, indices):
+    """
+    Function to load distilled 3D features by OpenScene (with the eval_simplified.ipynb).
+    Filters to match points with the fused features for later.
+    example: "scene0000_00_vh_clean_2_openscene_feat_distill.npy"
+
+    :param path: file path
+    :param indices: matching indices
     
+    :return: distilled features
+    """
     distilled = np.load(path)
     #cast and normalize embeddings for distilled 
     distilled = distilled[indices, :]
@@ -48,6 +76,20 @@ def load_distilled_features(path, indices):
     return distilled_f
 
 def highlight_query(query, feature_type, agg_type, distill, fused, fpc, fpcc, device):
+    """
+    Function to highlight similar points to the query as a heatmap.
+
+    :param query: text
+    :param feature_type: "fused", "distilled" or "ensembled"
+    :param agg_type: "mean" or "max"
+    :param distill: distilled features
+    :param fused: fused features
+    :param fpc: filtered point cloud coords
+    :param fpcc: filtered point cloud colors
+    :param device: device
+    
+    :return: aggregated similarity matrix
+    """
     
     import clip
     model, preprocess = clip.load("ViT-L/14@336px")
@@ -111,8 +153,15 @@ def highlight_query(query, feature_type, agg_type, distill, fused, fpc, fpcc, de
     return agg_sim_mat
 
 def confusion_matrix(pred_ids, gt_ids, num_classes):
-    '''calculate the confusion matrix.'''
+    """
+    Function to calculate confusion matrix, from OpenScene.
 
+    :param pred_ids: prediction labels
+    :param gt_ids: gt labels
+    :param num_classes: number of classes in the used dataset
+    
+    :return: confusion matrix
+    """
     assert pred_ids.shape == gt_ids.shape, (pred_ids.shape, gt_ids.shape)
     idxs = gt_ids != UNKNOWN_ID
     if NO_FEATURE_ID in pred_ids: # some points have no feature assigned for prediction
@@ -130,7 +179,15 @@ def confusion_matrix(pred_ids, gt_ids, num_classes):
         num_classes, num_classes)).astype(np.ulonglong)
 
 def get_iou(label_id, confusion, gts):
-    '''calculate IoU.'''
+    """
+    Function to calculate IoU, from OpenScene.
+
+    :param label_id: label_id
+    :param confusion: confusion matrix
+    :param gts: gt labels
+    
+    :return: IoU
+    """
 
     # true positives
     tp = np.longlong(confusion[label_id, label_id])
@@ -146,7 +203,21 @@ def get_iou(label_id, confusion, gts):
     return float(tp) / denom, tp, denom, total
 
 def evaluate(labelset, descriptors, model, feature_type, agg_type, distill, fused, gt_ids):
-        
+    """
+    Function to evaluate IoU scores.
+
+    :param labelset: string array consists of label names in the dataset
+    :param descriptors: dictionary for rare object descriptions, key = rare object name as a string, values = string array with descriptors
+    :param model: model
+    :param feature_type: "fused", "distilled" or "ensembled"
+    :param agg_type: "mean" or "max"
+    :param distill: distilled features
+    :param fused: fused features
+    :param gt_ids: gt_ids
+    
+    :return: mean IoU and class IoUs
+    """
+    
     descriptor_lengths = []
     
     with torch.no_grad():
@@ -240,7 +311,14 @@ def evaluate(labelset, descriptors, model, feature_type, agg_type, distill, fuse
     return class_ious, class_accs, mean_iou, mean_acc, pred_ids
 
 def print_results(labelset, class_ious, descriptors):
+    """
+    Function to print results, from OpenScene.
+
+    :param labelset: string array consists of label names in the dataset
+    :param class_ious: class IoUs
+    :param descriptors: dictionary for rare object descriptions, key = rare object name as a string, values = string array with descriptors
     
+    """
     print('classes                 IoU/ total')
     print('----------------------------')
     for i in range(len(labelset)):
@@ -261,7 +339,14 @@ def print_results(labelset, class_ious, descriptors):
             continue
             
 def print_results_table(labelset, class_ious, descriptors):
+    """
+    Function to print results using Tabulate.
+
+    :param labelset: string array consists of label names in the dataset
+    :param class_ious: class IoUs
+    :param descriptors: dictionary for rare object descriptions, key = rare object name as a string, values = string array with descriptors
     
+    """
     results = [["classes","IoU", "tp/(tp + fp + fn)", "total points" ]]
     
     for i in range(len(labelset)):
@@ -284,7 +369,15 @@ def print_results_table(labelset, class_ious, descriptors):
     print(table)
         
 def descriptors_from_prompt(text, verbose = True):
-    
+    """
+    Function to get descriptors for the rare objects. Not always consistent, sometimes the output text is not right, set verbose = True to check.
+    Not necessary to use, can set the descriptors manually as well.
+
+    :param text: prompt to get descriptors in a certain format
+    :param verbose: if True, print output from API
+
+    :return descriptors: dictionary for rare object descriptions, key = rare object name as a string, values = string array with descriptors
+    """
     import openai
 
     openai.api_key = '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'
@@ -316,6 +409,14 @@ def descriptors_from_prompt(text, verbose = True):
 
 
 def combinations_descriptor(descriptors, subset_len):
+    """
+    Function to get different combinations of the descriptors.
+
+    :param descriptors: dictionary for rare object descriptions, key = rare object name as a string, values = string array with descriptors
+    :param subset_len: length of the combination subset
+
+    :return comb_dict_list: list of dictionaries for the combinations of descriptors
+    """
     
     combinations_dict= {}
     for key, value in descriptors.items():
@@ -332,7 +433,20 @@ def combinations_descriptor(descriptors, subset_len):
     return comb_dict_list
 
 def try_diff_combs(labelset, comb_dict_list, model, feature_type, agg_type, distill, fused, gt_ids):
+    """
+    Function to evaluate different combinations of the descriptors.
 
+    :param labelset:  string array consists of label names in the dataset
+    :param comb_dict_list: list of dictionaries for the combinations of descriptors
+    :param model: model
+    :param feature_type: "fused", "distilled" or "ensembled" 
+    :param agg_type: "mean" or "max"
+    :param distill: distilled features
+    :param fused: fused features
+    :param gt_ids: gt labels
+    
+    :return: list of IoU results
+    """
     class_IoU_result_list = []
     class_accs_result_list = []
     mean_iou_result_list = []

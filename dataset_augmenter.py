@@ -25,6 +25,14 @@ class DatasetAugmenter:
         self.scene_labels = None
 
     def load_model(self, uid, label, rot_axis_angle=None, height=None):
+        """
+        Loads 3d model from the Objaverse dataset.
+
+        :param uid: unique 3d model UID given by Objaverse
+        :param label: ground truth label with which the model should be labeled
+        :param rot_axis_angle: additional rotation of model in axis-angle form
+        :param height: desired height (z-axis) of model after rotation
+        """
         if label in self.model_triangle_meshes:
             print(f'Label {label} already present!')
             return
@@ -43,20 +51,42 @@ class DatasetAugmenter:
         self.model_positions[label] = np.array([0., 0., 0.])
 
     def visualize_model(self, label):
+        """
+        Visualizes one of the models.
+        :param label: ground truth label of the model to be shown
+        """
         o3d.visualization.draw_plotly([self.model_triangle_meshes[label]])
 
     def rotate_model(self, label, rot_axis_angle):
+        """
+        Rotates one of the models.
+
+        :param label: ground truth label of the model to be rotated
+        :param rot_axis_angle: desired rotation in axis-angle form
+        """
         rot_matrix = o3d.geometry.get_rotation_matrix_from_axis_angle(rot_axis_angle)
         self.model_triangle_meshes[label].rotate(rot_matrix)
         self.__center_model(label)
 
     def scale_model(self, label, height):
+        """
+        Scales one of the models to a specific height (z-axis).
+
+        :param label: ground truth label of the model to be scaled
+        :param height: the desired height
+        """
         model_bounding_box = self.model_triangle_meshes[label].get_axis_aligned_bounding_box()
         scale_factor = height / model_bounding_box.max_bound[2]
         self.model_triangle_meshes[label].scale(scale_factor, np.zeros(3))
         self.__center_model(label)
 
     def __center_model(self, label):
+        """
+        Centers one of the models. For the X and Y direction, the axis aligned bounding box is centered around zero.
+        For the Z direction, the boxes' base is placed at zero.
+
+        :param label: ground truth label of the model to be centered
+        """
         model_bounding_box = self.model_triangle_meshes[label].get_axis_aligned_bounding_box()
         bb_center = model_bounding_box.get_center()
         translation = np.array([-bb_center[0], -bb_center[1], -model_bounding_box.min_bound[2]])
@@ -65,8 +95,12 @@ class DatasetAugmenter:
         model_bounding_box.translate(translation)
 
     def load_scene(self, scene_name):
+        """
+        Loads a ScanNet scene.
+        :param scene_name: name of the scene to be loaded (e.g. 'scene0000_00')
+        """
         self.scene_name = scene_name
-        scene_files = glob.glob(os.path.join(self.path3d, f'**/{scene_name}*'), recursive=True)  # can be train/val
+        scene_files = glob.glob(os.path.join(self.path3d, f'**/{scene_name}*'), recursive=True)  # can be train or val
         assert len(scene_files) == 1
 
         scene_path = scene_files[0]
@@ -77,9 +111,20 @@ class DatasetAugmenter:
         self.scene_point_cloud.colors = o3d.utility.Vector3dVector(scene_colors)
 
     def visualize_scene(self):
+        """
+        Visualizes the current ScanNet scene.
+        """
         o3d.visualization.draw_plotly([self.scene_point_cloud])
 
     def place_model_in_scene(self, xy_position, label):
+        """
+        Places one of the models in the ScanNet scene, 'on top' of all objects at specific location.
+        The center of the model's bounding box is set to the x and y location. The z location is determined by the
+        highest point in the ScanNet point cloud.
+
+        :param xy_position: x and y location where the model should be placed
+        :param label: ground truth label of the model in question
+        """
         model_bounding_box = self.model_triangle_meshes[label].get_axis_aligned_bounding_box()
         bb_min = model_bounding_box.get_min_bound()
         bb_max = model_bounding_box.get_max_bound()
@@ -95,6 +140,9 @@ class DatasetAugmenter:
         self.model_positions[label] = np.concatenate([xy_position, np.array([max_height])])
 
     def visualize_placement(self):
+        """
+        Visualizes the ScanNet scene and all models placed therein.
+        """
         for label, mesh in self.model_triangle_meshes.items():
             mesh.translate(self.model_positions[label])
         o3d.visualization.draw_plotly([self.scene_point_cloud] +
@@ -103,6 +151,13 @@ class DatasetAugmenter:
             mesh.translate(-self.model_positions[label])
 
     def export(self, output_path):
+        """
+        Generates a new ScanNet scene (both 2d and 3d data) with all models placed in the scene.
+        2d data is rendered in Open3D and occlusions are calculated with the provided depth maps.
+        For 3d point cloud data, the models are sampled uniformly.
+
+        :param output_path: path of the output directory
+        """
         assert os.path.isdir(output_path)
 
         output_path2d = os.path.join(output_path, '2d')
@@ -178,7 +233,7 @@ class DatasetAugmenter:
             o3d.io.write_triangle_mesh(mesh_path, mesh)
             mesh.translate(-self.model_positions[label])
 
-            # Workaround to preserve textures
+            # This workaround is necessary to preserve textures
             _object = o3d.io.read_triangle_model(mesh_path)
             render.scene.add_model(f'object_{label}', _object)
 

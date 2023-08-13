@@ -1,8 +1,11 @@
 import numpy as np
 from dataset_augmenter import DatasetAugmenter
 
-augmenter = DatasetAugmenter('/mnt/3dcv/projects/openscene_test/data/scannet/scannet_2d',
-                             '/mnt/3dcv/projects/openscene_test/data/scannet/scannet_3d')
+path_2d_data = '/mnt/3dcv/projects/openscene_test/data/scannet/scannet_2d'
+path_3d_data = '/mnt/3dcv/projects/openscene_test/data/scannet/scannet_3d'
+path_output = '/home/aleks/3dcv/openseg_aug_new'
+
+augmenter = DatasetAugmenter(path_2d_data, path_3d_data)
 
 # STOOL
 augmenter.load_model('9b975361717b4da79b18480bcc4e6dc8', 20,
@@ -32,4 +35,4 @@ augmenter.place_model_in_scene(np.array([3.15, 3.15]), 21)
 augmenter.place_model_in_scene(np.array([1.6, 3.5]), 22)
 augmenter.place_model_in_scene(np.array([6., 4.5]), 23)
 
-augmenter.export('/home/aleks/3dcv/openseg_aug_new')
+augmenter.export(path_output)
